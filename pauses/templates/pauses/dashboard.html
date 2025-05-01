@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Pause{% endblock %}
+
+{% block content %}
+<h1>Dashboard Pause</h1>
+
+{% if error_message %}
+    <p style="color: red;">{{ error_message }}</p>
+{% endif %}
+
+{% if ongoing_pauses %}
+    <h2>Pause en cours :</h2>
+    {% for pause in ongoing_pauses %}
+        <p>Type : {{ pause.type_of_pause }} | Début : {{ pause.start_time }}</p>
+    {% endfor %}
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="end_pause">Terminer la pause</button>
+    </form>
+{% else %}
+    <h2>Démarrer une pause :</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label for="pause_type">Choisir le type de pause :</label>
+        <select name="type_of_pause" id="type_of_pause" required>
+            {% if can_take_cafe %}
+                <option value="cafe">Pause Café</option>
+            {% endif %}
+            {% if can_take_dejeuner %}
+                <option value="dejeuner">Pause Déjeuner</option>
+            {% endif %}
+        </select>
+        <button type="submit" name="start_pause">Démarrer la pause</button>
+    </form>
+{% endif %}
+
+<h2>Pauses terminées :</h2>
+{% for pause in completed_pauses %}
+    <p>Type : {{ pause.type_of_pause }} | Début : {{ pause.start_time }} | Fin : {{ pause.end_time }}</p>
+{% empty %}
+    <p>Aucune pause terminée.</p>
+{% endfor %}
+{% endblock %}

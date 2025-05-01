@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Pointage - Check Out{% endblock %}
+
+{% block content %}
+    {% if not active_attendance %}
+        <p>Aucun pointage actif trouvé. Veuillez d'abord effectuer un pointage.</p>
+    {% else %}
+        <h3>Pointage en cours</h3>
+        <p><strong>Heure de pointage :</strong> {{ active_attendance.check_in_time|date:"d M Y H:i" }}</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Check Out</button>
+        </form>
+    {% endif %}
+{% endblock %}

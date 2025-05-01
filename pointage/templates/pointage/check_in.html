@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Pointage - Check In{% endblock %}
+
+{% block content %}
+    <h2>Enregistrer votre pointage</h2>
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="latitude">Latitude:</label>
+            <input type="password" id="latitude" name="latitude" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="longitude">Longitude:</label>
+            <input type="password" id="longitude" name="longitude" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Pointage</button>
+    </form>
+
+    <script>
+        // Fonction pour obtenir la position actuelle de l'utilisateur
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    document.getElementById("latitude").value = position.coords.latitude;
+                    document.getElementById("longitude").value = position.coords.longitude;
+                }, function() {
+                    alert("La géolocalisation a échoué. Veuillez entrer les coordonnées manuellement.");
+                });
+            } else {
+                alert("La géolocalisation n'est pas supportée par ce navigateur.");
+            }
+        }
+
+        // Récupérer la position automatiquement au chargement de la page
+        window.onload = getLocation;
+    </script>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Arrêter la pause{% endblock %}
+
+{% block content %}
+    <h2>Arrêter la pause</h2>
+
+    {% if error %}
+        <p>{{ error }}</p>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Arrêter la pause</button>
+    </form>
+
+    <a href="{% url 'pauses:dashboard_pauses' %}">Retour au tableau de bord</a>
+{% endblock %}

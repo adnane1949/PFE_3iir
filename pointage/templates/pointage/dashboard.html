@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block content %}
+    <h2>Bienvenue dans le tableau de bord</h2>
+
+    <div class="active-pointage">
+        {% if active_attendance %}
+            <h3>Pointage en cours</h3>
+            <p><strong>Heure de pointage :</strong> {{ active_attendance.check_in_time|date:"d M Y H:i" }}</p>
+            <form method="post" action="{% url 'pointage:check_out' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Check Out</button>
+            </form>
+        {% else %}
+            <p>Aucun pointage actif. Veuillez effectuer un <a href="{% url 'pointage:check_in' %}">pointage</a> pour commencer votre journée.</p>
+        {% endif %}
+    </div>
+
+    <h3>Historique des présences</h3>
+    {% if attendances %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Heure de pointage</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Heure de sortie</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attendance in attendances %}
+                    <tr>
+                        <td>{{ attendance.check_in_time|date:"d M Y H:i" }}</td>
+                        <td>{{ attendance.latitude }}</td>
+                        <td>{{ attendance.longitude }}</td>
+                        <td>
+                            {% if attendance.check_out_time %}
+                                {{ attendance.check_out_time|time:"H:i" }}
+                            {% else %}
+                                Non enregistré
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Aucune présence enregistrée.</p>
+    {% endif %}
+    <a href="{% url 'pauses:dashboard' %}">Tableau de bord des pauses</a>
+
+{% endblock %}
